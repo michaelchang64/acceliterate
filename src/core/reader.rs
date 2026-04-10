@@ -162,6 +162,14 @@ impl ReadingSession {
         }
     }
 
+    /// Reset to start of document, pause, and reset stats.
+    pub fn restart(&mut self) {
+        self.pause();
+        self.position = 0;
+        self.max_position_reached = 0;
+        self.stats = SessionStats::new(self.config.wpm);
+    }
+
     /// Set WPM, clamped to 50-1000.
     pub fn set_wpm(&mut self, wpm: u32) {
         self.config.wpm = wpm.clamp(50, 1000);

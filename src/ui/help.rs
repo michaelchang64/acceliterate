@@ -11,7 +11,8 @@ pub const HELP_BINDINGS: &[(&str, &str)] = &[
     ("\u{2192}", "Jump forward 1 sentence"),
     ("\u{2191}", "Increase WPM by 25"),
     ("\u{2193}", "Decrease WPM by 25"),
-    ("Tab", "Toggle RSVP / Scroll mode"),
+    ("0", "Restart from beginning"),
+    ("Tab", "Cycle reading mode"),
     (".", "Zoom in (wider spacing)"),
     (",", "Zoom out (tighter spacing)"),
     ("b", "Toggle big text mode"),
@@ -51,23 +52,25 @@ pub fn render(frame: &mut Frame) {
 
     for (key, description) in HELP_BINDINGS {
         lines.push(Line::from(vec![
-            Span::raw("  "),
+            Span::raw("    "),
             Span::styled(format!("{:<8}", key), key_style),
             Span::styled(" \u{2014} ", separator_style),
             Span::styled(*description, desc_style),
         ]));
     }
 
-    // Footer spacing + close instruction.
+    // Footer spacing + close instruction (centered).
     lines.push(Line::from(""));
     lines.push(Line::from(""));
-    lines.push(Line::from(Span::styled(
-        "Press ? to close",
-        Style::default().fg(Color::DarkGray),
-    )));
+    lines.push(
+        Line::from(Span::styled(
+            "Press ? to close",
+            Style::default().fg(Color::DarkGray),
+        ))
+        .alignment(Alignment::Center),
+    );
 
-    let paragraph = Paragraph::new(lines)
-        .alignment(Alignment::Center);
+    let paragraph = Paragraph::new(lines);
 
     frame.render_widget(paragraph, inner);
 }
@@ -111,8 +114,8 @@ mod tests {
     }
 
     #[test]
-    fn help_bindings_has_eleven_entries() {
-        assert_eq!(HELP_BINDINGS.len(), 11);
+    fn help_bindings_count() {
+        assert_eq!(HELP_BINDINGS.len(), 12);
     }
 
     #[test]

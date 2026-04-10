@@ -28,6 +28,7 @@ pub fn handle_key(app: &mut App, key: KeyEvent) {
         KeyCode::Down => app.session.adjust_wpm(-25),
         KeyCode::Char('.') => app.zoom_in(),
         KeyCode::Char(',') => app.zoom_out(),
+        KeyCode::Char('0') => app.session.restart(),
         KeyCode::Char('b') => app.big_text = !app.big_text,
         KeyCode::Tab => app.toggle_mode(),
         KeyCode::Char('?') => app.show_help = !app.show_help,
@@ -180,13 +181,24 @@ mod tests {
     // --- Mode toggle ---
 
     #[test]
-    fn tab_toggles_mode() {
+    fn tab_cycles_modes() {
         let mut app = make_app();
         assert_eq!(app.mode, crate::app::ReadingMode::Rsvp);
         handle_key(&mut app, press_key(KeyCode::Tab));
         assert_eq!(app.mode, crate::app::ReadingMode::Scroll);
         handle_key(&mut app, press_key(KeyCode::Tab));
+        assert_eq!(app.mode, crate::app::ReadingMode::Focus);
+        handle_key(&mut app, press_key(KeyCode::Tab));
         assert_eq!(app.mode, crate::app::ReadingMode::Rsvp);
+    }
+
+    #[test]
+    fn zero_restarts() {
+        let mut app = make_app();
+        app.session.position = 1;
+        handle_key(&mut app, press_key(KeyCode::Char('0')));
+        assert_eq!(app.session.position, 0);
+        assert!(!app.session.is_playing());
     }
 
     // --- Unknown keys are no-ops ---

@@ -1,5 +1,6 @@
 pub mod bigfont;
 pub mod controls;
+pub mod focus;
 pub mod help;
 pub mod rsvp;
 pub mod scroll;
@@ -28,6 +29,7 @@ fn render_main_layout(app: &App, frame: &mut Frame) {
     match app.mode {
         ReadingMode::Rsvp => rsvp::render(app, frame, chunks[1]),
         ReadingMode::Scroll => scroll::render(app, frame, chunks[1]),
+        ReadingMode::Focus => focus::render(app, frame, chunks[1]),
     }
     controls::render(frame, chunks[2]);
 }

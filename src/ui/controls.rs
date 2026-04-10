@@ -10,7 +10,7 @@ pub fn render(frame: &mut Frame, area: Rect) {
 
     let line = Line::from(vec![
         Span::styled(
-            "Space: Play/Pause | \u{2190}\u{2192}: Sentence | \u{2191}\u{2193}: WPM | Tab: Mode | ,/.: Zoom | b: Big | ?: Help | q: Quit",
+            "Space: Play/Pause | \u{2190}\u{2192}: Sent | \u{2191}\u{2193}: WPM | 0: Restart | Tab: Mode | ,/.: Zoom | b: Big | ?: Help | q: Quit",
             hint_style,
         ),
     ]);
@@ -23,14 +23,14 @@ pub fn render(frame: &mut Frame, area: Rect) {
 mod tests {
     #[test]
     fn hint_text_contains_all_keys() {
-        let hint = "Space: Play/Pause | \u{2190}\u{2192}: Sentence | \u{2191}\u{2193}: WPM | Tab: Mode | ,/.: Zoom | b: Big | ?: Help | q: Quit";
+        let hint = "Space: Play/Pause | \u{2190}\u{2192}: Sent | \u{2191}\u{2193}: WPM | 0: Restart | Tab: Mode | ,/.: Zoom | b: Big | ?: Help | q: Quit";
         assert!(hint.contains("Space"));
         assert!(hint.contains("Play/Pause"));
-        assert!(hint.contains("Sentence"));
+        assert!(hint.contains("Sent"));
         assert!(hint.contains("WPM"));
+        assert!(hint.contains("Restart"));
+        assert!(hint.contains("Tab"));
         assert!(hint.contains("Help"));
         assert!(hint.contains("Quit"));
-        assert!(hint.contains("?"));
-        assert!(hint.contains("q"));
     }
 }

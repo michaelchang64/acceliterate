@@ -5,6 +5,8 @@ use crate::core::reader::ReadingSession;
 pub enum ReadingMode {
     Rsvp,
     Scroll,
+    /// Split view: scroll context on top, focused word strip on bottom.
+    Focus,
 }
 
 /// TUI application state. Wraps ReadingSession + UI-specific state.
@@ -34,7 +36,8 @@ impl App {
     pub fn toggle_mode(&mut self) {
         self.mode = match self.mode {
             ReadingMode::Rsvp => ReadingMode::Scroll,
-            ReadingMode::Scroll => ReadingMode::Rsvp,
+            ReadingMode::Scroll => ReadingMode::Focus,
+            ReadingMode::Focus => ReadingMode::Rsvp,
         };
     }
 
@@ -94,7 +97,7 @@ mod tests {
     }
 
     #[test]
-    fn toggle_mode() {
+    fn toggle_mode_cycles() {
         let doc = dummy_document();
         let config = ReaderConfig::default();
         let session = ReadingSession::new(doc, config);
@@ -103,6 +106,8 @@ mod tests {
         assert_eq!(app.mode, ReadingMode::Rsvp);
         app.toggle_mode();
         assert_eq!(app.mode, ReadingMode::Scroll);
+        app.toggle_mode();
+        assert_eq!(app.mode, ReadingMode::Focus);
         app.toggle_mode();
         assert_eq!(app.mode, ReadingMode::Rsvp);
     }
