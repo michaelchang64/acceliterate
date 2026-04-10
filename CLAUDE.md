@@ -26,8 +26,63 @@ Terminal-based speed reading app that supports RSVP (Rapid Serial Visual Present
 ## Build & Run
 
 ```bash
+# Build the project
 cargo build
-cargo run -- <file_path>
+
+# Run with a text file (default 300 WPM)
+cargo run -- myfile.txt
+
+# Run with custom WPM
+cargo run -- -w 450 myfile.txt
+
+# Quick check — compiles but doesn't build binary (fastest feedback loop)
+cargo check
+```
+
+## Testing
+
+```bash
+# Run all tests
+cargo test
+
+# Run tests for a specific module
+cargo test core::orp
+cargo test core::reader
+cargo test core::tokenizer
+cargo test ui::rsvp
+cargo test event
+
+# Run a single test by name
+cargo test test_name_here
+
+# Run tests with output visible (useful for debugging)
+cargo test -- --nocapture
+
+# Run only ignored tests (if any)
+cargo test -- --ignored
+```
+
+## Project Structure
+
+```
+src/
+  main.rs           — CLI (clap), terminal setup/teardown, main loop
+  app.rs            — App struct: wraps ReadingSession + UI state
+  event.rs          — Keyboard event dispatch (key → action)
+  core/             — Reading engine (no TUI deps)
+    reader.rs       — ReadingSession state machine (play/pause/tick/navigate)
+    document.rs     — Word/Sentence/Paragraph/Document data structures
+    tokenizer.rs    — Plain text → Document parser
+    timing.rs       — Variable word display duration
+    orp.rs          — Optimal Recognition Point calculation
+    stats.rs        — Session statistics tracking
+    config.rs       — Reader configuration
+  ui/               — TUI rendering (ratatui)
+    mod.rs          — Layout: splits screen into stats/rsvp/controls
+    rsvp.rs         — RSVP word display with ORP highlighting
+    stats.rs        — Stats panel (WPM, progress, time)
+    controls.rs     — Bottom keybinding hints bar
+    help.rs         — Full-screen help overlay
 ```
 
 ## Conventions
